@@ -32,7 +32,7 @@
         const title = document.getElementById("title");
         const prev = document.getElementById("prev");
         const next = document.getElementById("forward");
-
+    
         const songs = [
             {
                 name: "selena",
@@ -50,9 +50,9 @@
                 artist: "Camila Cabello",
             },
         ];
-
+    
         let isPlaying = false;
-
+    
         // Play function
         const playMusic = () => {
             isPlaying = true;
@@ -60,7 +60,7 @@
             play.classList.replace("fa-play", "fa-pause");
             img.classList.add("anime");
         };
-
+    
         // Pause function
         const pauseMusic = () => {
             music.pause();
@@ -68,7 +68,7 @@
             play.classList.replace("fa-pause", "fa-play");
             img.classList.remove("anime");
         };
-
+    
         // Play/Pause button event listener
         play.addEventListener('click', () => {
             if (isPlaying) {
@@ -77,31 +77,52 @@
                 playMusic();
             }
         });
-
+    
         // Load songs into the player
-        const loadSong = (songs) => {
-            title.textContent = songs.title;
-            artist.textContent = songs.artist;
-           music.src="music/"+songs.name+".mp3";
-           img.src="images/"+songs.name+".jpg";
+        const loadSong = (song) => {
+            title.textContent = song.title;
+            artist.textContent = song.artist;
+            music.src = "music/" + song.name + ".mp3";
+            img.src = "images/" + song.name + ".jpg";
         };
-
+    
         // Load the first song
-        songIndex=0;
-        const nextSong = ()=>{
-            
-            songIndex=(songIndex+1)%songs.length;
+        let songIndex = 0;
+        loadSong(songs[songIndex]);
+    
+        // Automatically play the first song after loading it (if allowed by the browser)
+        const tryAutoPlay = () => {
+            // Try to autoplay the first song
+            music.play().then(() => {
+                isPlaying = true;
+                play.classList.replace("fa-play", "fa-pause");
+                img.classList.add("anime");
+            }).catch((error) => {
+                // Autoplay was blocked, let the user manually play the music
+                console.log("Autoplay prevented by browser: ", error);
+            });
+        };
+    
+        // Call auto-play function after loading the first song
+        tryAutoPlay();
+    
+        // Next song function
+        const nextSong = () => {
+            songIndex = (songIndex + 1) % songs.length;
             loadSong(songs[songIndex]);
             playMusic();
-        }
-        const prevSong = ()=>{
-            
-            songIndex=(songIndex-1 + songs.length)%songs.length;
+        };
+    
+        // Previous song function
+        const prevSong = () => {
+            songIndex = (songIndex - 1 + songs.length) % songs.length;
             loadSong(songs[songIndex]);
             playMusic();
-        }
-        next.addEventListener('click',nextSong);
-        prev.addEventListener('click',prevSong);
+        };
+    
+        next.addEventListener('click', nextSong);
+        prev.addEventListener('click', prevSong);
     </script>
+    
 </body>
 </html>
