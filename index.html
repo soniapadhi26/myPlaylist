@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main_div">
+        <div class="music_container">
+            <h2 id="artist">Selena Gomez</h2> <!-- Fixed id for artist -->
+            <h3 id="title">Who Says</h3> <!-- Only one title id -->
+            <div class="img_container">
+                <img src="images/selena.jpg" alt="">
+            </div>
+            <audio src="music/who says.mp3"></audio>
+            <div class="music_controls">
+                <i class="fa-solid fa-backward" id="prev" title="Previous"></i>
+                <i class="fa-solid fa-play main_button" id="play" title="Play"></i>
+                <i class="fa-solid fa-forward" id="forward" title="Next"></i> <!-- Changed id to 'next' -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const music = document.querySelector("audio");
+        const img = document.querySelector('img');
+        const play = document.getElementById("play");
+        const artist = document.getElementById("artist");
+        const title = document.getElementById("title");
+        const prev = document.getElementById("prev");
+        const next = document.getElementById("forward");
+
+        const songs = [
+            {
+                name: "selena",
+                title: "Who Says",
+                artist: "Selena Gomez",
+            },
+            {
+                name: "dua",
+                title: "Levitating",
+                artist: "Dua Lipa",
+            },
+            {
+                name: "camila",
+                title: "Real Friends",
+                artist: "Camila Cabello",
+            },
+        ];
+
+        let isPlaying = false;
+
+        // Play function
+        const playMusic = () => {
+            isPlaying = true;
+            music.play();
+            play.classList.replace("fa-play", "fa-pause");
+            img.classList.add("anime");
+        };
+
+        // Pause function
+        const pauseMusic = () => {
+            music.pause();
+            isPlaying = false;
+            play.classList.replace("fa-pause", "fa-play");
+            img.classList.remove("anime");
+        };
+
+        // Play/Pause button event listener
+        play.addEventListener('click', () => {
+            if (isPlaying) {
+                pauseMusic();
+            } else {
+                playMusic();
+            }
+        });
+
+        // Load songs into the player
+        const loadSong = (songs) => {
+            title.textContent = songs.title;
+            artist.textContent = songs.artist;
+           music.src="music/"+songs.name+".mp3";
+           img.src="images/"+songs.name+".jpg";
+        };
+
+        // Load the first song
+        songIndex=0;
+        const nextSong = ()=>{
+            
+            songIndex=(songIndex+1)%songs.length;
+            loadSong(songs[songIndex]);
+            playMusic();
+        }
+        const prevSong = ()=>{
+            
+            songIndex=(songIndex-1 + songs.length)%songs.length;
+            loadSong(songs[songIndex]);
+            playMusic();
+        }
+        next.addEventListener('click',nextSong);
+        prev.addEventListener('click',prevSong);
+    </script>
+</body>
+</html>
